@@ -1,19 +1,19 @@
-version: "3.8"
-
 services:
-  db:
-    container_name: api-base
+  postgres:
+    image: bitnami/postgresql:latest
+    container_name: db_postgres
     restart: always
-    image: postgres
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: docker
       POSTGRES_DB: api-base
-      PGDATA: /data/postgres
+    ports:
+      - 5432:5432
     volumes:
-      - ./data/pg:/data/postgres
+      - postgres_data:/bitnami/postgresql
+volumes:
+  postgres_data:
+    driver: local
   # cache:
   #   container_name: nest-clean-cache
   #   image: redis
