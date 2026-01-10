@@ -10,12 +10,16 @@ export const envSchema = z.object({
   NODE_ENV: z
     .enum(['development', 'production', 'test'])
     .default('development'),
-
   PORT: z.coerce.number().default(3333),
-
   API_URL: z.string().url().default('http://localhost:3333'),
-
   DATABASE_URL: z.string().min(1, 'DATABASE_URL é obrigatória'),
+  APP_PORT: z.coerce.number().default(8080),
+  DB_HOST: z.string(),
+  DB_PORT: z.coerce.number(),
+  DB_NAME: z.string(),
+  DB_USER: z.string(),
+  DB_PASSWORD: z.string(),
+  DB_DIALECT: z.string(),
 })
 
 const parsedEnv = envSchema.safeParse(process.env)

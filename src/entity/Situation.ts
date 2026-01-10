@@ -6,46 +6,46 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from "typeorm";
-import { User } from "./User";
-import { OneToMany } from "typeorm/browser";
+} from 'typeorm'
+import { User } from './User'
+import { OneToMany } from 'typeorm/browser'
 
-@Entity({ name: "situations" })
+@Entity({ name: 'situations' })
 export class Situation {
   // 🔑 Chave primária usando UUID (mais seguro e escalável)
-  @PrimaryGeneratedColumn("uuid")
-  id!: string;
+  @PrimaryGeneratedColumn('uuid')
+  id!: string
 
   // 📌 Nome da situação (ex: Ativo, Inativo, Bloqueado)
-  @Column({ name: "name", type: "varchar", length: 100 })
-  name!: string;
+  @Column({ name: 'name', type: 'varchar', length: 100 })
+  name!: string
 
   // 🔗 Uma situação pode estar associada a vários usuários
-  @OneToMany(() => User, (user) => user.situation)
-  users!: User[];
+  @OneToMany(() => User, user => user.situation)
+  users!: User[]
 
   // 🕒 Data de criação (automática)
   @CreateDateColumn({
-    name: "created_at",
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
+    name: 'created_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
   })
-  createdAt!: Date;
+  createdAt!: Date
 
   // 🔄 Data de atualização (automática)
   @UpdateDateColumn({
-    name: "updated_at",
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
-    onUpdate: "CURRENT_TIMESTAMP",
+    name: 'updated_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
   })
-  updatedAt!: Date;
+  updatedAt!: Date
 
   // 🗑 Soft delete
   @DeleteDateColumn({
-    name: "deleted_at",
-    type: "timestamp",
-    default: () => "CURRENT_TIMESTAMP",
+    name: 'deleted_at',
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP',
   })
-  deletedAt?: Date;
+  deletedAt?: Date
 }

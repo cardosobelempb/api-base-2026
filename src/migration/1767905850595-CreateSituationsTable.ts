@@ -1,16 +1,16 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm";
+import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 
-import { uuidColumn, varcharColumn } from "./helpers/columns.helper";
-import { createIndex } from "./helpers/index.helper";
-import { ensurePgCryptoExtension } from "./helpers/extensions.helper";
-import { baseColumns } from "./helpers/base-columns.helper";
+import { uuidColumn, varcharColumn } from './helpers/columns.helper'
+import { createIndex } from './helpers/index.helper'
+import { ensurePgCryptoExtension } from './helpers/extensions.helper'
+import { baseColumns } from './helpers/base-columns.helper'
 
 export class CreateSituationsTable1767905850595 implements MigrationInterface {
-  private readonly tableName = "situations";
+  private readonly tableName = 'situations'
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Garante suporte a UUID
-    await ensurePgCryptoExtension(queryRunner);
+    await ensurePgCryptoExtension(queryRunner)
 
     // Cria tabela
     await queryRunner.createTable(
@@ -18,17 +18,17 @@ export class CreateSituationsTable1767905850595 implements MigrationInterface {
         name: this.tableName,
         columns: [
           uuidColumn(), // id
-          varcharColumn("name", 100), // coluna do domínio
+          varcharColumn('name', 100), // coluna do domínio
           ...baseColumns(), // created_at, updated_at, deleted_at
         ],
         indices: [
-          createIndex({ name: "IDX_SITUATIONS_NAME", columns: ["name"] }),
+          createIndex({ name: 'IDX_SITUATIONS_NAME', columns: ['name'] }),
         ],
-      })
-    );
+      }),
+    )
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropTable(this.tableName);
+    await queryRunner.dropTable(this.tableName)
   }
 }

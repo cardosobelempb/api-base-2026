@@ -1,37 +1,41 @@
-# Node.js dependencia
-node_modules/
-
-# Diretório com os arquivos compilados
-dist/
-build/
-
-# TypeScript
-*.tsbuildinfo
+# compiled output
+/build
+/dist
+/node_modules
 
 # Logs
-logs/
+logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
 
-# Environment variables
-.env
-.env.local
-.env.*.local
-
-# Editor-specific files
-#.vscode/
-.idea/
-*.swp
-*.swo
-*.DS_Store
-Thumbs.db
-
-# OS-specific files
+# OS
 .DS_Store
-*.lock
 
-# Other
-coverage/
-tmp/
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+.env
+.env.development
+.env.test
+.env.local
+tsconfig.tsbuildinfo

@@ -1,5 +1,5 @@
 import cors from 'cors'
-import express from 'express'
+import express, { Application } from 'express'
 import swaggerUi from 'swagger-ui-express'
 
 import swaggerJSDoc from 'swagger-jsdoc'
@@ -17,17 +17,25 @@ const options = {
   apis: [],
 }
 
-const swaggerSpec = swaggerJSDoc(options)
+function createApp(): Application {
+  const swaggerSpec = swaggerJSDoc(options)
 
-const app = express()
+  const app = express()
 
-app.use(cors())
+  app.use(cors())
 
-app.use(express.json())
+  // Middleware para parsing de JSON
+  app.use(express.json())
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+  // Middleware para parsing de dados URL encoded
+  app.use(express.urlencoded({ extended: true }))
 
-app.use(router)
-app.use(erroHandler)
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
-export { app }
+  app.use(router)
+  app.use(erroHandler)
+
+  return app
+}
+
+export { createApp }
