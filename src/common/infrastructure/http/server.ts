@@ -7,17 +7,14 @@ import type { Server } from 'http'
  * Retorna a instância do servidor para controle do ciclo de vida.
  */
 function startServer(): Server {
-  const port = Number(env.PORT)
-
-  if (!port || Number.isNaN(port)) {
-    throw new Error('[Server] Porta inválida ou não definida')
-  }
+  const port = env.PORT
+  const url = env.API_URL
 
   const app = createApp()
 
   const server = app.listen(port, () => {
-    console.log(`🚀 Server running on port ${port}`)
-    console.log(`📄 API docs available at GET /docs`)
+    console.log(`🚀 Server running on port ${url}/${port}`)
+    console.log(`📄 API docs available at GET ${url}/docs`)
   })
 
   server.on('error', error => {

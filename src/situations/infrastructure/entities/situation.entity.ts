@@ -1,13 +1,13 @@
+import { User } from '@/users/infrastructure/entities/user.entity'
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { User } from './User'
+
 import { OneToMany } from 'typeorm/browser'
 
 @Entity({ name: 'situations' })

@@ -1,3 +1,4 @@
+import { Situation } from '@/situations/infrastructure/entities/situation.entity'
 import {
   Entity,
   Column,
@@ -8,7 +9,6 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm'
-import { Situation } from './Situation'
 
 @Entity({ name: 'users' })
 export class User {
