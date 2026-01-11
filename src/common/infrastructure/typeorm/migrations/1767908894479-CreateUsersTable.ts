@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
 
-import { uuidColumn, varcharColumn } from './helpers/columns.helper'
-import { ensurePgCryptoExtension } from './helpers/extensions.helper'
-import { createForeignKey } from './helpers/foreign-key.helper'
+import { uuidColumn, varcharColumn } from '../migration-helpers/columns.helper'
+import { ensurePgCryptoExtension } from '../migration-helpers/extensions.helper'
+import { createForeignKey } from '../migration-helpers/foreign-key.helper'
 
-import { baseColumns } from './helpers/base-columns.helper'
-import { createIndex } from './helpers/index.helper'
+import { baseColumns } from '../migration-helpers/base-columns.helper'
+import { createIndex } from '../migration-helpers/index.helper'
 
 export class CreateUsersTable1767908894479 implements MigrationInterface {
   private readonly tableName = 'users'

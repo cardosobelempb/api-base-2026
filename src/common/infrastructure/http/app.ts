@@ -1,39 +1,77 @@
 import cors from 'cors'
 import express, { Application } from 'express'
+import helmet from 'helmet'
 import swaggerUi from 'swagger-ui-express'
-
 import swaggerJSDoc from 'swagger-jsdoc'
-import { erroHandler } from './middlewares/errorHandler'
-import { router } from './routes'
 
-const options = {
+import { router } from './routes'
+import { errorHandler } from './middlewares/errorHandler'
+
+/**
+ * Configuração do Swagger (OpenAPI)
+ * Mantida isolada para facilitar manutenção e versionamento
+ */
+const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'API Documntation',
+      title: 'API Documentation',
       version: '1.0.0',
     },
   },
-  apis: [],
+
+  /**
+   * Arquivos que contêm anotações Swagger
+   * Ajuste conforme estrutura do projeto
+   */
+  apis: ['src/routes/**/*.ts'],
 }
 
+/**
+ * Cria e configura a aplicação Express
+ */
 function createApp(): Application {
-  const swaggerSpec = swaggerJSDoc(options)
-
   const app = express()
 
-  app.use(cors())
+  /**
+   * Segurança básica
+   */
+  app.use(helmet())
 
-  // Middleware para parsing de JSON
+  /**
+   * CORS com configuração explícita
+   * (evita comportamento inesperado em produção)
+   */
+  app.use(
+    cors({
+      origin: '*', // ajuste para domínios específicos
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    }),
+  )
+
+  /**
+   * Parsing de requisições
+   */
   app.use(express.json())
-
-  // Middleware para parsing de dados URL encoded
   app.use(express.urlencoded({ extended: true }))
+
+  /**
+   * Documentação da API
+   */
+  const swaggerSpec = swaggerJSDoc(swaggerOptions)
 
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
+  /**
+   * Rotas da aplicação
+   */
   app.use(router)
-  app.use(erroHandler)
+
+  /**
+   * Middleware global de tratamento de erros
+   * Deve ser o ÚLTIMO middleware
+   */
+  app.use(errorHandler)
 
   return app
 }

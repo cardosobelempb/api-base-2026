@@ -1,13 +1,15 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm'
+import { baseColumns } from '../migration-helpers/base-columns.helper'
+import {
+  intColumn,
+  priceColumn,
+  uuidColumn,
+  varcharColumn,
+} from '../migration-helpers/columns.helper'
+import { ensurePgCryptoExtension } from '../migration-helpers/extensions.helper'
 
-import { uuidColumn, varcharColumn } from './helpers/columns.helper'
-import { createIndex } from './helpers/index.helper'
-import { ensurePgCryptoExtension } from './helpers/extensions.helper'
-import { baseColumns } from './helpers/base-columns.helper'
-
-export class CreateSituationsTable1767905850595 implements MigrationInterface {
-  private readonly tableName = 'situations'
-
+export class CreateProducts1768081898213 implements MigrationInterface {
+  private readonly tableName = 'products'
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Garante suporte a UUID
     await ensurePgCryptoExtension(queryRunner)
@@ -19,11 +21,13 @@ export class CreateSituationsTable1767905850595 implements MigrationInterface {
         columns: [
           uuidColumn(), // id
           varcharColumn('name', 100), // coluna do domínio
+          priceColumn('price'),
+          intColumn('quantity'),
           ...baseColumns(), // created_at, updated_at, deleted_at
         ],
-        indices: [
-          createIndex({ name: 'IDX_SITUATIONS_NAME', columns: ['name'] }),
-        ],
+        // indices: [
+        //   createIndex({ name: 'IDX_PRODUCTS_NAME', columns: ['name'] }),
+        // ],
       }),
     )
   }

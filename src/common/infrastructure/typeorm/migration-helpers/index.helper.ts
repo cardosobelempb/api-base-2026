@@ -1,4 +1,4 @@
-import { TableIndex } from "typeorm";
+import { TableIndex } from 'typeorm'
 
 /**
  * Cria um índice para uma tabela do TypeORM
@@ -12,19 +12,19 @@ export const createIndex = ({
   columns,
   unique = false,
 }: {
-  name: string;
-  columns: string[];
-  unique?: boolean;
+  name: string
+  columns: string[]
+  unique?: boolean
 }): TableIndex => {
   if (!columns || columns.length === 0) {
     throw new Error(
-      `Não é possível criar índice "${name}" sem colunas definidas`
-    );
+      `Não é possível criar índice "${name}" sem colunas definidas`,
+    )
   }
 
   return new TableIndex({
     name,
     columnNames: columns,
     isUnique: unique,
-  });
-};
+  })
+}

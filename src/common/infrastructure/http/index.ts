@@ -1,17 +1,27 @@
 /**
  * Entry point da aplicação.
- * Responsável apenas por iniciar o servidor.
+ * Responsável por inicializar dependências críticas
+ * e iniciar o servidor apenas quando tudo estiver pronto.
  */
 
-import { AppDataSource } from '../typeorm'
+import { dataSource } from '../typeorm'
 import { startServer } from './server'
 
-AppDataSource.initialize()
-  .then(() => {
-    console.log('Data Source has been initialized! 🚀')
-  })
-  .catch(error =>
-    console.log('Error during Data Source initialization:', error),
-  )
+async function bootstrap(): Promise<void> {
+  try {
+    console.log('Inicializando Data Source...')
 
-startServer()
+    await dataSource.initialize()
+
+    console.log('Data Source inicializado com sucesso! 🚀')
+
+    startServer()
+  } catch (error) {
+    console.error('Erro ao inicializar a aplicação:', error)
+
+    // Encerra o processo com erro
+    process.exit(1)
+  }
+}
+
+bootstrap()

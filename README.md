@@ -21,6 +21,7 @@ npm run start:watch
 Executar as migrations para criar as tabelas no banco de dados.
 ```
 npx typeorm migration:run -d dist/data-source.js
+npm run typeorm -- -d ./src/common/infrastructure/typeorm/index.ts migration:run
 ```
 
 Executar as seeds para cadastrar registro de teste nas tabelas no banco de dados.
@@ -112,6 +113,7 @@ npm install --save-dev @types/dotenv
 Criar a migrations que será usada para criar a tabela no banco de dados.
 ```
 npx typeorm migration:create src/migration/<nome-da-migrations>
+npm typeorm migration:create -- -d ./src/common/infrastructure/typeorm/migrations/CreateProduct
 ``` 
 ```
 npx typeorm migration:create src/migration/CreateSituationsTable
