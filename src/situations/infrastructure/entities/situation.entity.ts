@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 
-import { OneToMany } from 'typeorm/browser'
+import { OneToMany } from 'typeorm'
 
 @Entity({ name: 'situations' })
 export class Situation {

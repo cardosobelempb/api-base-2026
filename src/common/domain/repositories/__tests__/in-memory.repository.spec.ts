@@ -94,4 +94,31 @@ describe('InmemoryRepository unit tests', () => {
     expect(result).toBeDefined()
     expect(result).toStrictEqual(data)
   })
+
+  it('should throw error when id not found', async () => {
+    await sut['save'](entity).catch(err => {
+      expect(err).toBeInstanceOf(NotFoundError)
+      expect(err.path).toBe(`Entity not found using id ${entity.id}`)
+      expect(err.statusCode).toBe(404)
+    })
+  })
+
+  it('should update an entity', async () => {
+    entity = await sut.save(props)
+    const entityUpdated = {
+      id: entity.id,
+      name: 'updated name',
+      price: 2000,
+      createdAt,
+      updatedAt,
+      deletedAt,
+    }
+    entity = await sut.save(entityUpdated)
+
+    const result = await sut.search({ filter: 'updated name' })
+
+    expect(result.items).toHaveLength(1)
+    expect(result.items[0]?.name).toBe('updated name')
+    expect(result.items[0]).toStrictEqual(entity)
+  })
 })
