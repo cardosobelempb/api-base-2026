@@ -1,6 +1,7 @@
 import { describe, expect, it, beforeEach } from 'vitest'
 import { InMemoryRepository } from '../in-memory.repository'
 import { randomUUID } from 'node:crypto'
+import { NotFoundError } from '../../errors'
 
 type StubEntity = {
   id: string
@@ -78,9 +79,19 @@ describe('InmemoryRepository unit tests', () => {
     expect(result.items[0]).toStrictEqual(entity)
   })
 
-  it('should find by id', async () => {
-    await sut.save(props)
-    const result = await sut.findById(entity.id)
+  it('should throw error when id not found', async () => {
+    const id = randomUUID()
+    await sut['_get'](id).catch(err => {
+      expect(err).toBeInstanceOf(NotFoundError)
+      expect(err.path).toBe(`Entity not found using id ${id}`)
+      expect(err.statusCode).toBe(404)
+    })
+  })
+
+  it('should find a entity by id', async () => {
+    const data = await sut.save(props)
+    const result = await sut.findById(data.id)
     expect(result).toBeDefined()
+    expect(result).toStrictEqual(data)
   })
 })
