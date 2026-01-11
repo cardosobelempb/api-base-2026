@@ -14,7 +14,7 @@ export abstract class RepositoryAbstract<Entity, CreateProps> {
   /**
    * Cria uma entidade em memória (não persiste)
    */
-  abstract newEntity(dto: CreateProps): Entity
+  abstract newEntity(props: CreateProps): Entity
 
   /**
    * Persiste uma entidade
