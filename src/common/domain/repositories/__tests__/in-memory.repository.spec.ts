@@ -77,4 +77,10 @@ describe('InmemoryRepository unit tests', () => {
     expect(result.items[0]?.name).toBe('test name')
     expect(result.items[0]).toStrictEqual(entity)
   })
+
+  it('should find by id', async () => {
+    await sut.save(props)
+    const result = await sut.findById(entity.id)
+    expect(result).toBeDefined()
+  })
 })
