@@ -110,7 +110,11 @@ export abstract class InMemoryRepository<
 
     // Aplicar filtro, ordenação e paginação
     const filteredItems = await this.applyFilter(this.items, filter)
-    const orderedItems = this.applySort(filteredItems, sortBy, sortDirection)
+    const orderedItems = await this.applySort(
+      filteredItems,
+      sortBy,
+      sortDirection,
+    )
     const paginatedItems = await this.applyPagination(
       orderedItems,
       page,
@@ -145,11 +149,11 @@ export abstract class InMemoryRepository<
   ): Promise<Entity[]>
 
   /** Ordenação genérica e segura */
-  protected applySort(
+  protected async applySort(
     items: Entity[],
     sortBy?: keyof Entity,
     sortDirection: 'asc' | 'desc' = 'asc',
-  ): Entity[] {
+  ): Promise<Entity[]> {
     if (!sortBy || !this.sortableFields.includes(sortBy)) return items
 
     return [...items].sort((a, b) => {
