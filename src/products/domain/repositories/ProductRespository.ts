@@ -19,6 +19,6 @@ export abstract class ProductRepository extends RepositoryAbstract<
   ProductCreateProps
 > {
   abstract findByName(name: string): Promise<ProductModel>
-  abstract findAllByIds(ids: ProductId[]): Promise<ProductModel[]>
+  abstract findAllByIds(productIds: ProductId[]): Promise<ProductModel[]>
   abstract conflictngName(name: string): Promise<void>
 }
