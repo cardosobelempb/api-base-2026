@@ -9,7 +9,7 @@ type StubEntity = {
   price: number
   createdAt: Date
   updatedAt: Date
-  deletedAt: Date
+  deletedAt: null
 }
 
 class StubInMemoryRepository extends InMemoryRepository<StubEntity> {
@@ -37,13 +37,13 @@ describe('InmemoryRepository unit tests', () => {
   let props: any
   let createdAt: Date
   let updatedAt: Date
-  let deletedAt: Date
+  let deletedAt: null
 
   beforeEach(() => {
     sut = new StubInMemoryRepository()
     createdAt = new Date()
     updatedAt = new Date()
-    deletedAt = new Date()
+    deletedAt = null
 
     props = {
       name: 'test name',
@@ -111,7 +111,7 @@ describe('InmemoryRepository unit tests', () => {
       price: 2000,
       createdAt,
       updatedAt,
-      deletedAt,
+      deletedAt: null,
     }
     entity = await sut.save(entityUpdated)
 
@@ -120,5 +120,28 @@ describe('InmemoryRepository unit tests', () => {
     expect(result.items).toHaveLength(1)
     expect(result.items[0]?.name).toBe('updated name')
     expect(result.items[0]).toStrictEqual(entity)
+  })
+
+  it('should throw error when id not found delete', async () => {
+    await sut['delete'](entity).catch(err => {
+      expect(err).toBeInstanceOf(NotFoundError)
+      expect(err.path).toBe(`Entity not found using id ${entity.id}`)
+      expect(err.statusCode).toBe(404)
+    })
+  })
+
+  it('should delete an entity', async () => {
+    const data = await sut.save(props)
+    const result = await sut.search({ filter: 'test name' })
+
+    expect(result.items).toHaveLength(1)
+    await sut.delete(data)
+
+    // expect(result.items.length).toBe(0)
+    expect(result.items[0]?.deletedAt).toBeDefined()
+    expect(result.items[0]?.deletedAt).toEqual(expect.any(Date))
+    expect(result.items).toHaveLength(1)
+    expect(result.items[0]?.name).toBe('test name')
+    expect(result.items[0]).toStrictEqual(data)
   })
 })

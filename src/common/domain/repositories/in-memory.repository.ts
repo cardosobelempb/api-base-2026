@@ -85,19 +85,17 @@ export abstract class InMemoryRepository<
    * Soft delete da entidade
    */
   async delete(entity: Entity): Promise<void> {
-    if (!entity.id) {
-      throw new NotFoundError(`Entity not found using id ${entity.id}`)
-    }
-
     await this._get(entity.id)
     const index = this.items.findIndex(item => item.id === entity.id)
 
     if (index === -1) {
-      throw new NotFoundError(`Entity not found using id ${entity.id}`)
+      // this.items.push(entity)
+      this.items.splice(index, 1)
+    } else {
+      this.items[index] = entity
+      // Agora TypeScript sabe que items[index] existe
+      this.items[index]!.deletedAt = new Date()
     }
-
-    // Agora TypeScript sabe que items[index] existe
-    this.items[index]!.deletedAt = new Date()
   }
 
   /**
@@ -134,7 +132,7 @@ export abstract class InMemoryRepository<
   /**
    * Busca entidade por ID ou lança erro
    */
-  protected async _get(id: string): Promise<Entity> {
+  protected async _get(id: string | undefined): Promise<Entity> {
     const entity = this.items.find(item => item.id === id && !item.deletedAt)
     if (!entity) throw new NotFoundError(`Entity not found using id ${id}`)
     return entity
