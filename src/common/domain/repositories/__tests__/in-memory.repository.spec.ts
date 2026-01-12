@@ -1,10 +1,10 @@
-import { describe, expect, it, beforeEach } from 'vitest'
-import { InMemoryRepository } from '../in-memory.repository'
-import { randomUUID } from 'node:crypto'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { NotFoundError } from '../../errors'
+import { UUIDVO } from '../../values-objects'
+import { InMemoryRepository } from '../in-memory.repository'
 
 type StubEntity = {
-  id: string
+  id: UUIDVO
   name: string
   price: number
   createdAt: Date
@@ -51,7 +51,7 @@ describe('InmemoryRepository unit tests', () => {
     }
 
     entity = {
-      id: randomUUID(),
+      id: UUIDVO.create(),
       createdAt,
       updatedAt,
       deletedAt,
@@ -80,17 +80,16 @@ describe('InmemoryRepository unit tests', () => {
   })
 
   it('should throw error when id not found', async () => {
-    const id = randomUUID()
-    await sut['_get'](id).catch(err => {
+    await sut['_get'](entity.id.getValue()).catch(err => {
       expect(err).toBeInstanceOf(NotFoundError)
-      expect(err.path).toBe(`Entity not found using id ${id}`)
+      expect(err.path).toBe(`Entity not found using id ${entity.id.getValue()}`)
       expect(err.statusCode).toBe(404)
     })
   })
 
   it('should find a entity by id', async () => {
     const data = await sut.save(props)
-    const result = await sut.findById(data.id)
+    const result = await sut.findById(data.id.getValue())
     expect(result).toBeDefined()
     expect(result).toStrictEqual(data)
   })
@@ -98,7 +97,7 @@ describe('InmemoryRepository unit tests', () => {
   it('should throw error when id not found', async () => {
     await sut['save'](entity).catch(err => {
       expect(err).toBeInstanceOf(NotFoundError)
-      expect(err.path).toBe(`Entity not found using id ${entity.id}`)
+      expect(err.path).toBe(`Entity not found using id ${entity.id.getValue()}`)
       expect(err.statusCode).toBe(404)
     })
   })

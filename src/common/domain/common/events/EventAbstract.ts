@@ -1,4 +1,4 @@
-import { UUIDVO } from "../values-objects";
+import { UUIDVO } from '../../values-objects'
 
 /**
  * DomainEventAbstract
@@ -15,11 +15,11 @@ import { UUIDVO } from "../values-objects";
  */
 export abstract class EventAbstract {
   /** Timestamp exato em que o evento ocorreu — eventos devem ser imutáveis. */
-  public abstract readonly occurredAt: Date;
+  public abstract readonly occurredAt: Date
 
   /**
    * Retorna o identificador do agregado ao qual o evento pertence.
    * Geralmente usado pelo EventDispatcher / Outbox pattern.
    */
-  public abstract getAggregateId(): UUIDVO;
+  public abstract getAggregateId(): UUIDVO
 }

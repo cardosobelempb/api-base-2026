@@ -1,26 +1,27 @@
 import { InMemoryRepository } from '@/common/domain/repositories/in-memory.repository'
-import { ProductModel } from '@/products/domain/models/products.model'
+
 import {
   ProductId,
   ProductRepository,
 } from '@/products/domain/repositories/ProductRespository'
-import { ProductEntity } from '../typeorm/entities/product.entity'
+
 import { ConflictError, ErrorCode, NotFoundError } from '@/common'
+import { ProductProps } from '@/products/domain/entities/product.entity'
 
 export class ProductInMemoryRepository
-  extends InMemoryRepository<ProductEntity>
+  extends InMemoryRepository<ProductProps>
   implements ProductRepository
 {
-  protected sortableFields: (keyof ProductEntity)[] = ['name', 'createdAt']
+  protected sortableFields: (keyof ProductProps)[] = ['name', 'createdAt']
 
-  async findByName(name: string): Promise<ProductModel> {
+  async findByName(name: string): Promise<ProductProps> {
     const product = this.items.find(item => item.name === name)
     if (!product) {
       throw new NotFoundError(`${ErrorCode.NOT_FOUND} name ${name}`)
     }
     return product
   }
-  async findAllByIds(productIds: ProductId[]): Promise<ProductModel[]> {
+  async findAllByIds(productIds: ProductId[]): Promise<ProductProps[]> {
     // Converte os IDs para um Set para busca eficiente
     const ids = new Set(productIds.map(productId => productId.id))
 
@@ -34,9 +35,9 @@ export class ProductInMemoryRepository
     }
   }
   protected async applyFilter(
-    items: ProductEntity[],
+    items: ProductProps[],
     filter?: string,
-  ): Promise<ProductEntity[]> {
+  ): Promise<ProductProps[]> {
     if (!filter) return items
     return items.filter(item =>
       item.name.toLocaleLowerCase().includes(filter.toLocaleLowerCase()),
@@ -44,10 +45,10 @@ export class ProductInMemoryRepository
   }
 
   protected async applySort(
-    items: ProductEntity[],
-    sortBy?: keyof ProductEntity | undefined,
+    items: ProductProps[],
+    sortBy?: keyof ProductProps | undefined,
     sortDirection?: 'asc' | 'desc',
-  ): Promise<ProductEntity[]> {
+  ): Promise<ProductProps[]> {
     return super.applySort(
       items,
       sortBy ?? 'createdAt',

@@ -1,11 +1,11 @@
-import { RepositoryAbstract } from '@/common'
-import { ProductModel } from '../models/products.model'
+import { RepositoryAbstract, UUIDVO } from '@/common'
+import { ProductModel } from '../models/product.model'
 
 export type ProductId = {
-  id: string
+  id: UUIDVO
 }
 export type ProductCreateProps = {
-  id: string
+  id: UUIDVO
   name: string
   price: number
   quantity: number

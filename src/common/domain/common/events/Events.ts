@@ -1,20 +1,18 @@
-import { AggregateAbstract } from '../abstract';
-import { UUIDVO } from '../values-objects';
-import { EventAbstract } from './EventAbstract';
+import { AggregateAbstract } from '../abstract'
+import { UUIDVO } from '../../values-objects'
+import { EventAbstract } from './EventAbstract'
 
 /**
  * Callback tipado para eventos de domínio
  */
-export type DomainEventCallback<E extends EventAbstract = EventAbstract> =
-  (event: E) => void;
+export type DomainEventCallback<E extends EventAbstract = EventAbstract> = (
+  event: E,
+) => void
 
 /**
  * Mapa de handlers por nome do evento
  */
-type HandlersMap = Record<
-  string,
-  Array<DomainEventCallback<EventAbstract>>
->;
+type HandlersMap = Record<string, Array<DomainEventCallback<EventAbstract>>>
 
 /**
  * Events
@@ -34,13 +32,13 @@ export class Events {
   // ---------------------------------------------------------------------------
 
   /** Handlers registrados por evento */
-  private static handlers: HandlersMap = {};
+  private static handlers: HandlersMap = {}
 
   /** Aggregates com eventos pendentes */
-  private static markedAggregates: AggregateAbstract<unknown>[] = [];
+  private static markedAggregates: AggregateAbstract<unknown>[] = []
 
   /** Flag de controle (útil para testes) */
-  public static shouldRun = true;
+  public static shouldRun = true
 
   // ---------------------------------------------------------------------------
   // REGISTRATION
@@ -53,12 +51,12 @@ export class Events {
     eventName: string,
     callback: DomainEventCallback<E>,
   ): void {
-    const handlers = this.handlers[eventName] ?? [];
+    const handlers = this.handlers[eventName] ?? []
 
     this.handlers[eventName] = [
       ...handlers,
       callback as DomainEventCallback<EventAbstract>,
-    ];
+    ]
   }
 
   // ---------------------------------------------------------------------------
@@ -72,12 +70,12 @@ export class Events {
   public static markAggregateForDispatch(
     aggregate: AggregateAbstract<unknown>,
   ): void {
-    const alreadyMarked = this.markedAggregates.some(
-      (a) => a.id.equals(aggregate.id),
-    );
+    const alreadyMarked = this.markedAggregates.some(a =>
+      a.id.equals(aggregate.id),
+    )
 
     if (!alreadyMarked) {
-      this.markedAggregates.push(aggregate);
+      this.markedAggregates.push(aggregate)
     }
   }
 
@@ -85,13 +83,13 @@ export class Events {
    * Despacha todos os eventos de um aggregate específico
    */
   public static dispatchEventsForAggregate(id: UUIDVO): void {
-    const aggregate = this.findAggregateById(id);
+    const aggregate = this.findAggregateById(id)
 
-    if (!aggregate || !this.shouldRun) return;
+    if (!aggregate || !this.shouldRun) return
 
-    this.dispatchAggregateEvents(aggregate);
-    aggregate.clearEvents();
-    this.removeAggregate(aggregate);
+    this.dispatchAggregateEvents(aggregate)
+    aggregate.clearEvents()
+    this.removeAggregate(aggregate)
   }
 
   // ---------------------------------------------------------------------------
@@ -103,9 +101,9 @@ export class Events {
    * 👉 Ideal para testes de subscribers
    */
   public static dispatchEvent(event: EventAbstract): void {
-    if (!this.shouldRun) return;
+    if (!this.shouldRun) return
 
-    this.dispatch(event);
+    this.dispatch(event)
   }
 
   /**
@@ -115,7 +113,7 @@ export class Events {
     aggregate: AggregateAbstract<unknown>,
   ): void {
     for (const event of aggregate.domainEvents) {
-      this.dispatch(event);
+      this.dispatch(event)
     }
   }
 
@@ -123,18 +121,18 @@ export class Events {
    * Dispatch de um único evento para seus handlers
    */
   private static dispatch(event: EventAbstract): void {
-    const eventName = event.constructor.name;
-    const handlers = this.handlers[eventName];
+    const eventName = event.constructor.name
+    const handlers = this.handlers[eventName]
 
-    if (!handlers || handlers.length === 0) return;
+    if (!handlers || handlers.length === 0) return
 
     for (const handler of handlers) {
       try {
-        handler(event);
+        handler(event)
       } catch (error) {
         // Não engolimos erro de domínio
         // Mantém rastreabilidade e falha explícita
-        throw error;
+        throw error
       }
     }
   }
@@ -146,15 +144,13 @@ export class Events {
   private static findAggregateById(
     id: UUIDVO,
   ): AggregateAbstract<unknown> | undefined {
-    return this.markedAggregates.find((a) => a.id.equals(id));
+    return this.markedAggregates.find(a => a.id.equals(id))
   }
 
-  private static removeAggregate(
-    aggregate: AggregateAbstract<unknown>,
-  ): void {
+  private static removeAggregate(aggregate: AggregateAbstract<unknown>): void {
     this.markedAggregates = this.markedAggregates.filter(
-      (a) => !a.equals(aggregate),
-    );
+      a => !a.equals(aggregate),
+    )
   }
 
   // ---------------------------------------------------------------------------
@@ -166,7 +162,7 @@ export class Events {
    * ⚠️ Deve ser usado em afterEach de testes
    */
   public static clearAll(): void {
-    this.handlers = {};
-    this.markedAggregates = [];
+    this.handlers = {}
+    this.markedAggregates = []
   }
 }

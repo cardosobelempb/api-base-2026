@@ -1,5 +1,5 @@
-import { Entity } from "../entities";
-import { EventAbstract, Events } from "../events";
+import { Entity } from '../../entities'
+import { EventAbstract, Events } from '../events'
 
 /**
  * AggregateRoot
@@ -15,7 +15,7 @@ export abstract class AggregateAbstract<Props> extends Entity<Props> {
    * Lista interna de eventos de domínio pendentes.
    * Mantida privada para evitar mutações externas.
    */
-  private domainEventsQueue: EventAbstract[] = [];
+  private domainEventsQueue: EventAbstract[] = []
 
   /**
    * Retorna uma cópia dos eventos pendentes.
@@ -23,7 +23,7 @@ export abstract class AggregateAbstract<Props> extends Entity<Props> {
    * para evitar mutações externas inesperadas.
    */
   get domainEvents(): EventAbstract[] {
-    return [...this.domainEventsQueue];
+    return [...this.domainEventsQueue]
   }
 
   /**
@@ -34,10 +34,10 @@ export abstract class AggregateAbstract<Props> extends Entity<Props> {
    * - Evita confusões com métodos que apenas adicionariam ao array.
    */
   protected registerEvent(event: EventAbstract): void {
-    this.domainEventsQueue.push(event);
+    this.domainEventsQueue.push(event)
 
     // Notifica o mecanismo de Domain Events
-    Events.markAggregateForDispatch(this);
+    Events.markAggregateForDispatch(this)
   }
 
   /**
@@ -45,6 +45,6 @@ export abstract class AggregateAbstract<Props> extends Entity<Props> {
    * Utilizado após a publicação dos eventos.
    */
   clearEvents(): void {
-    this.domainEventsQueue = [];
+    this.domainEventsQueue = []
   }
 }
