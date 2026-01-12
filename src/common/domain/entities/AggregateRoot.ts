@@ -1,5 +1,5 @@
-import { Entity } from '../../entities'
-import { EventAbstract, Events } from '../events'
+import { DomainEntity } from '.'
+import { EventAbstract, Events } from '../common/events'
 
 /**
  * AggregateRoot
@@ -10,7 +10,7 @@ import { EventAbstract, Events } from '../events'
  * - Mantém encapsulação dos eventos e registra automaticamente
  *   o agregado no sistema de despacho de eventos.
  */
-export abstract class AggregateAbstract<Props> extends Entity<Props> {
+export abstract class AggregateRoot<Props> extends DomainEntity<Props> {
   /**
    * Lista interna de eventos de domínio pendentes.
    * Mantida privada para evitar mutações externas.

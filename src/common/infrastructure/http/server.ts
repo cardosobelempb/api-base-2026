@@ -13,7 +13,7 @@ function startServer(): Server {
   const app = createApp()
 
   const server = app.listen(port, () => {
-    console.log(`🚀 Server running on port ${url}/${port}`)
+    console.log(`🚀 Server running on GET ${url}`)
     console.log(`📄 API docs available at GET ${url}/docs`)
   })
 

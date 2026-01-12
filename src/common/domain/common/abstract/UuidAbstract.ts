@@ -1,6 +1,6 @@
 export abstract class UuidAbstract {
-  abstract getId(): string;
-  abstract equals(entity: UuidAbstract): boolean;
+  abstract getId(): string
+  abstract equals(entity: UuidAbstract): boolean
 }
 
 /**

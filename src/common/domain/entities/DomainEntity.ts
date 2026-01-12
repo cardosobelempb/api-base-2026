@@ -1,4 +1,4 @@
-import { UUIDVO } from '../common'
+import { UUIDVO } from '../values-objects'
 
 /**
  * Entidade base para o modelo de domínio.
