@@ -1,29 +1,29 @@
-// infra/typeorm/mappers/product.mapper.ts
-import { ProductEntity } from '@/products/domain/entities/product.entity'
-import { ProductOrmEntity } from '../entities/product.orm-entity'
-import { UUIDVO } from '@/common'
+// infrastructure/mappers/product.mapper.ts
+
+import { ProductEntity, ProductModel } from '@/products/domain'
 
 export class ProductMapper {
-  static toDomain(entity: ProductOrmEntity): ProductEntity {
-    return ProductEntity.create(
-      {
-        name: entity.name,
-        price: Number(entity.price),
-        quantity: entity.quantity,
-      },
-      UUIDVO.create(entity.id),
-    )
+  static toDomain(model: ProductModel): ProductEntity {
+    return ProductEntity.restore({
+      id: model.id,
+      name: model.name,
+      price: model.price,
+      quantity: model.quantity,
+      createdAt: model.createdAt,
+      updatedAt: model.updatedAt,
+      deletedAt: model.deletedAt,
+    })
   }
 
-  static toOrm(entity: ProductEntity): ProductOrmEntity {
+  static toModel(entity: ProductEntity): ProductModel {
     return {
-      id: entity.id.toString(),
+      id: entity.id,
       name: entity.name,
-      price: entity.price.toFixed(2),
+      price: entity.price,
       quantity: entity.quantity,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
-      deletedAt: entity.deletedAt ?? null,
+      deletedAt: entity.deletedAt,
     }
   }
 }

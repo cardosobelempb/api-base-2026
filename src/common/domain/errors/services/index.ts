@@ -15,4 +15,3 @@ export * from './service-error.interface'
 export * from './unauthorized.error'
 export * from './unprocessable.error'
 export * from './unsupported-media-type-error'
-

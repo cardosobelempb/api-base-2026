@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { NotFoundError } from '../../errors'
-import { UUIDVO } from '../../values-objects'
-import { InMemoryRepository } from '../in-memory.repository'
+import { NotFoundError } from '../../../errors'
+import { UUIDVO } from '../../../values-objects'
+import { RepositoryInMemory } from '../RepositoryInMemory'
 
 type StubEntity = {
   id: UUIDVO
@@ -12,7 +12,7 @@ type StubEntity = {
   deletedAt: null
 }
 
-class StubInMemoryRepository extends InMemoryRepository<StubEntity> {
+class StubInMemoryRepository extends RepositoryInMemory<StubEntity> {
   constructor() {
     super()
     this.sortableFields = ['name']

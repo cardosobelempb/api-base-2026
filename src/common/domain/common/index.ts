@@ -1,5 +1,5 @@
 export * from './abstract'
-export * from './events'
+export * from '../events'
 export * from './test'
 export * from './types'
 export * from './utils'

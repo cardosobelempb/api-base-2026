@@ -1,4 +1,4 @@
-import { RepositoryAbstract, UUIDVO } from '@/common'
+import { RepositoryDomain, UUIDVO } from '@/common'
 import { ProductModel } from '../models/product.model'
 
 export type ProductId = {
@@ -14,10 +14,7 @@ export type ProductCreateProps = {
   deletedAt?: Date | null // registros não deletados
 }
 
-export abstract class ProductRepository extends RepositoryAbstract<
-  ProductModel,
-  ProductCreateProps
-> {
+export abstract class ProductRepository extends RepositoryDomain<ProductModel> {
   abstract findByName(name: string): Promise<ProductModel>
   abstract findAllByIds(productIds: ProductId[]): Promise<ProductModel[]>
   abstract conflictngName(name: string): Promise<void>

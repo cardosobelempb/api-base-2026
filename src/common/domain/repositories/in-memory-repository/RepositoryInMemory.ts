@@ -1,7 +1,7 @@
-import { NotFoundError } from '../errors'
-import { UUIDVO } from '../values-objects'
-import { RepositoryAbstract } from './repository.abstract'
-import { SearchInput, SearchOutput } from './search'
+import { NotFoundError } from '../../errors'
+import { UUIDVO } from '../../values-objects'
+import { RepositorySearchable } from '../RepositorySearchable'
+import { SearchInput, SearchOutput } from '../RespositorySearch'
 
 /**
  * Tipos de propriedades genéricas de uma entidade
@@ -25,9 +25,9 @@ export type CreateProps<Entity> = Partial<
  * Repositório genérico em memória
  * Útil para testes ou prototipagem
  */
-export abstract class InMemoryRepository<
+export abstract class RepositoryInMemory<
   Entity extends ModelProps,
-> implements RepositoryAbstract<Entity, CreateProps<Entity>> {
+> implements RepositorySearchable<Entity> {
   /** Armazena todas as entidades em memória */
   protected items: Entity[] = []
 
@@ -69,8 +69,7 @@ export abstract class InMemoryRepository<
       entity.createdAt = new Date()
     }
 
-    entity.updatedAt = new Date()
-    const index = this.items.findIndex(item => item.id === entity.id)
+    const index = this.items.findIndex(item => item.id?.equals(entity.id))
 
     if (index === -1) {
       this.items.push(entity)

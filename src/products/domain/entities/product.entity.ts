@@ -1,69 +1,106 @@
 // domain/entities/product.entity.ts
-import { DomainEntity, UUIDVO } from '@/common'
+import { EntityDomain, UUIDVO } from '@/common'
+import { ProductProps } from './product.props'
 
-export interface ProductProps {
-  id: UUIDVO
-  name: string
-  price: number
-  quantity: number
-  createdAt: Date
-  updatedAt: Date
-  deletedAt?: Date | null
-}
+export class ProductEntity extends EntityDomain<ProductProps> {
+  /* =======================
+   * Getters
+   * ======================= */
 
-export class ProductEntity extends DomainEntity<ProductProps> {
-  get name() {
+  get id(): UUIDVO {
+    return this.props.id
+  }
+
+  get name(): string {
     return this.props.name
   }
 
-  get price() {
+  get price(): number {
     return this.props.price
   }
 
-  get quantity() {
+  get quantity(): number {
     return this.props.quantity
   }
 
-  get createdAt() {
+  get createdAt(): Date {
     return this.props.createdAt
   }
 
-  get updatedAt() {
+  get updatedAt(): Date {
     return this.props.updatedAt
   }
 
-  get deletedAt() {
+  get deletedAt(): Date | null {
     return this.props.deletedAt
   }
 
-  updatePrice(price: number) {
+  /* =======================
+   * Regras de negócio
+   * ======================= */
+
+  updatePrice(price: number): void {
+    if (price < 0) {
+      throw new Error('Preço não pode ser negativo')
+    }
+
     this.props.price = price
     this.touch()
   }
 
-  softDelete() {
+  increaseStock(amount: number): void {
+    if (amount <= 0) {
+      throw new Error('Quantidade inválida')
+    }
+
+    this.props.quantity += amount
+    this.touch()
+  }
+
+  softDelete(): void {
+    if (this.props.deletedAt) {
+      throw new Error('Produto já está deletado')
+    }
+
     this.props.deletedAt = new Date()
     this.touch()
   }
 
-  private touch() {
+  /* =======================
+   * Métodos internos
+   * ======================= */
+
+  private touch(): void {
     this.props.updatedAt = new Date()
   }
 
-  static create(
-    props: Omit<ProductProps, 'createdAt' | 'updatedAt' | 'deletedAt'>,
-    id?: UUIDVO,
-  ) {
+  /* =======================
+   * Fábricas
+   * ======================= */
+
+  static create(props: {
+    name: string
+    price: number
+    quantity: number
+  }): ProductEntity {
+    if (props.price < 0) {
+      throw new Error('Preço não pode ser negativo')
+    }
+
     const now = new Date()
 
-    return new ProductEntity(
-      {
-        ...props,
-        createdAt: now,
-        updatedAt: now,
-        deletedAt: null,
-      },
-      id,
-    )
+    return new ProductEntity({
+      id: UUIDVO.create(),
+      name: props.name,
+      price: props.price,
+      quantity: props.quantity,
+      createdAt: now,
+      updatedAt: now,
+      deletedAt: null,
+    })
+  }
+
+  static restore(props: ProductProps): ProductEntity {
+    return new ProductEntity(props)
   }
 }
